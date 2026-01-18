@@ -1,0 +1,65 @@
+Frame Data Storage
+Main Concepts
+
+
+Vision
+A universal, cloud-native data fabric that provides every FRAME app with independent, multi-modal storage (SQL, NoSQL, Vector, Graph, Object), fully governed encrypted, provisioned and migratable via a single control plane
+Tagline: “One API. Any storage. Full encryption. Full governance.”
+
+Problem Statement
+FRAME requires a unified, governable, multi-model data substrate enabling FRAME Apps to consume SQL, NoSQL, Vector, Graph, and Object storage without knowing underlying engines
+The challenge is to standardize storage provisioning, governance, tenancy, compliance, observability, and developer experience
+
+
+Objectives
+Unified all storage API
+App-level isolation
+Automated provisioning and migration
+Multi-cloud + Multi-region compatibility
+Full governance (OPA, RBAC, audit) and lineage
+Encryption everywhere by design
+Self-service developer-friendly experience
+
+
+High Level Architecture
+FRAME Apps -> UDL SDK -> UDL Broker -> Storage Engines
+Apps get access via FRAME SDK
+The broker is a software layer that abstracts all storage engines info one unified layer, this is UDL as in Unified Data Layer. It is a multi-model broker that fronts specialized engines
+The storage engines are any kind of storage we need to have
+We need a storage control plane layer to help with all provisioning and migrations
+UDL: is a multi-modal broker that fronts specialized engines
+SQL: PotgreSQL (with pg_partman, timescale optional), pgVector extension available
+NoSQL: MongoDB
+Vector DB: Weaviate(or pgVector on postgres when locality matters)
+Graph: Neo4j / Memgraph
+Object: MinIO (S3-compatible)
+SCP: Operator & APIs that:
+Provision per-App storage (isolatioin)
+Issue credentials/secrets, network policies and quotas
+Expose endpoints / DSNs to Apps
+Orchestrate migration (same-type or cross-type where sensible)
+Enforce policy, encryption, backup/DR, and lifecycle
+The storage engines are any kind of storage we need to have
+
+
+Conceptual Overview
+Unified Data Layer (UDL): logical abstraction that exposes uniform APIs to Apps for data access, regardless of underlying engine type
+Storage Control Plane (SCP): Kubernetes-base governance & automation layer that provisions, secures, migrates, and monitors per-App storages
+Engines behind the scenes: PostgreSQL(SQL+pgVector), MongoDB(NoSQL), Weaviate(Vector),Neo4j/Memgraph(Graph),MinIO(Object)
+Every App runs in tis owner namespace, with independent DB instances or schemas, buckets, and credentials. No cross-contamination
+
+
+FRAME UDL Properties
+A consistent, governed, multi-modal data layer that Apps can rely on for reliable, low-latency, queryable and programmatically accessible storage with properties:
+Isolation
+Governance
+Queryability
+Consistent CRUD
+Observability
+Versioning
+
+Provisioning Flow
+Storage Claim: Defines a request for a specific data storage(SQL, vector, object, etc..)
+Data Pipeline: Defines ingestion / transformation pipeline with their sources and target
+
+
